@@ -118,7 +118,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/pablo/Desktop/maximTest2/prisma/generated/client",
+      "value": "/home/pablo/Desktop/maximTest/prisma/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -135,7 +135,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../..",
@@ -145,7 +145,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "ciName": "Vercel",
   "inlineDatasources": {
     "db": {
       "url": {
