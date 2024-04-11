@@ -11,22 +11,26 @@ export default async function BlogPage() {
   const res = await getData();
   return (
     <div>
-      <h1 className="text-4xl">Результати</h1>
+      <h1 className="text-4xl mb-5">Результати</h1>
       <div className="flex flex-col gap-8">
         {res.map((item: any, index: number) => (
           <div className="flex flex-col gap-4" key={index}>
             <h1 className="text-left text-2xl">{item.userName}</h1>
-            {item.result.map((item2: any) => {
-              return (
-                <div
-                  key={item2.question}
-                  className="grid grid-cols-2 gap-4 text-left"
-                >
-                  <h2>{item2.question}</h2>
-                  <p className="text-center">{item2.answer}</p>
-                </div>
-              );
-            })}
+            <ul className=" flex flex-col">
+              {item.result.map((item2: any) => {
+                return (
+                  <li
+                    className="p-3 mb-2 rounded-md text-white bg-sky-600 text-lg font-bold"
+                    key={item2.id}
+                  >
+                    <p className=" flex gap-3">
+                      <span> {item2.number}</span>
+                      <span> {item2.title}</span>
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         ))}
       </div>

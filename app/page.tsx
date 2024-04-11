@@ -1,184 +1,114 @@
 "use client";
 import React, { useState } from "react";
-import { RadioGroup, Radio } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
-import { Input } from "@nextui-org/react";
-import { createUserResult } from "../actions";
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { createUserResult } from "@/actions";
+import { Input } from "@nextui-org/input";
+import { Button } from "@nextui-org/button";
 import { useSnackbar } from "notistack";
 
-const GamePreferences = () => {
-  const [nickName, setNickName] = useState("");
-  const [category, setCategory] = useState("");
-  const [manufacturer, setManufacturer] = useState("");
-  const [fabricType, setFabricType] = useState("");
-  const [model, setModel] = useState("");
-  const [designPreference, setDesignPreference] = useState("");
-  const [colorPreference, setColorPreference] = useState("");
-  const [sizePreference, setSizePreference] = useState("");
-  const [seamQuality, setSeamQuality] = useState("");
+const App = () => {
+  const [listItems, setListItems] = useState([
+    { id: "1", number: 1, title: "Шаурма (Shwarma)" },
+    { id: "2", number: 2, title: "Піца на вугіллі (Pizza on Charcoal)" },
+    { id: "3", number: 3, title: "Вареники з картоплею (Potato Vareniki)" },
+    { id: "4", number: 4, title: "Лагман (Lagman)" },
+    { id: "5", number: 5, title: "Медовик (Medovik)" },
+    { id: "6", number: 6, title: "Оладки (Oladky)" },
+    { id: "7", number: 7, title: "Холодний Рамен (Cold Ramen)" },
+    { id: "8", number: 8, title: "Тайські роли (Thai Rolls)" },
+    { id: "9", number: 9, title: "Індійські самоси (Indian Samosas)" },
+    { id: "10", number: 10, title: "Самса (Samsa)" },
+  ]);
+
+  const [userName, setUserName] = useState("");
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return;
+    const startIndex = result.source.index;
+    const endIndex = result.destination.index;
+    const copyTodos = [...listItems];
+    const [reorderTodo] = copyTodos.splice(startIndex, 1);
+    copyTodos.splice(endIndex, 0, reorderTodo);
+    setListItems(copyTodos);
+  };
+
   const handleSubmit = async () => {
     try {
-      await createUserResult({
-        userResults: [
-          {
-            question: "Яка ваша улюблена категорія чоловічих трусів?",
-            answer: category,
-          },
-          {
-            question: "Яка ваша улюблена фірма виробника трусів?",
-            answer: manufacturer,
-          },
-          {
-            question:
-              "Який тип тканини ви більше віддаєте перевагу для трусів?",
-            answer: fabricType,
-          },
-          {
-            question: "Яка ваша улюблена модель трусів?",
-            answer: model,
-          },
-          {
-            question:
-              "Як ви ставитеся до використання різноманітних кольорів у трусах?",
-            answer: colorPreference,
-          },
-          {
-            question: "Як ви обираєте розмір трусів?",
-            answer: sizePreference,
-          },
-        ],
-        userName: nickName,
-      });
+      await createUserResult({ userResults: listItems, userName });
 
       enqueueSnackbar("Ваші відповіді успішно відправлені", {
         variant: "success",
       });
-      setNickName("");
-      setCategory("");
-      setManufacturer("");
-      setFabricType("");
-      setModel("");
-      setDesignPreference("");
-      setColorPreference("");
-      setSizePreference("");
-      setSeamQuality("");
     } catch (error) {
-      enqueueSnackbar("Введенні дані не коректні", {
-        variant: "error",
-      });
+      enqueueSnackbar("Введенні дані не коректні", { variant: "error" });
     }
   };
 
   return (
-    <div className="flex flex-col gap-8 ml-60">
-      <h1>Введіть ваше ім&#39;я</h1>
-
-      <div className="w-64">
-        <Input
-          value={nickName}
-          onValueChange={setNickName}
-          placeholder="Ваше ім'я"
-          size="sm"
-        />
-      </div>
-      <div>
-        <h3>Яка ваша улюблена категорія чоловічих трусів?</h3>
-        <RadioGroup value={category} onValueChange={setCategory}>
-          <Radio value="a">a) Класичні</Radio>
-          <Radio value="b">b) Спортивні</Radio>
-          <Radio value="c">c) Труси-боксери</Radio>
-          <Radio value="d">d) Стринги</Radio>
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3>Яка ваша улюблена фірма виробника трусів?</h3>
-        <RadioGroup value={manufacturer} onValueChange={setManufacturer}>
-          <Radio value="a">a) Calvin Klein</Radio>
-          <Radio value="b">b) Hugo Boss</Radio>
-          <Radio value="c">c) Tommy Hilfiger</Radio>
-          <Radio value="d">d) Armani</Radio>
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3>Який тип тканини ви більше віддаєте перевагу для трусів?</h3>
-        <RadioGroup value={fabricType} onValueChange={setFabricType}>
-          <Radio value="a">a) Бавовна</Radio>
-          <Radio value="b">b) Віскоза</Radio>
-          <Radio value="c">c) Льон</Radio>
-          <Radio value="d">d) Синтетика</Radio>
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3>Яка ваша улюблена модель трусів?</h3>
-        <RadioGroup value={model} onValueChange={setModel}>
-          <Radio value="a">a) Сліп</Radio>
-          <Radio value="b">b) Боксери</Radio>
-          <Radio value="c">c) Труси-брифи</Radio>
-          <Radio value="d">d) Труси-стрінги</Radio>
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3>Які ваші уподобання стосовно дизайну трусів?</h3>
-        <RadioGroup
-          value={designPreference}
-          onValueChange={setDesignPreference}
-        >
-          <Radio value="a">a) Простий і класичний</Radio>
-          <Radio value="b">b) Модний і стильний</Radio>
-          <Radio value="c">c) Яскравий і оригінальний</Radio>
-          <Radio value="d">d) Екзотичний і вишуканий</Radio>
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3>
-          Як ви ставитеся до використання різноманітних кольорів у трусах?
-        </h3>
-        <RadioGroup value={colorPreference} onValueChange={setColorPreference}>
-          <Radio value="a">a) Переважно нейтральні кольори</Radio>
-          <Radio value="b">b) Я люблю яскраві та насичені кольори</Radio>
-          <Radio value="c">c) Залежить від настрою і обстановки</Radio>
-          <Radio value="d">d) Не впевнений</Radio>
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3>Як ви обираєте розмір трусів?</h3>
-        <RadioGroup value={sizePreference} onValueChange={setSizePreference}>
-          <Radio value="a">a) Точний розмір за таблицею</Radio>
-          <Radio value="b">
-            b) Зазвичай менший розмір для більшої підтримки
-          </Radio>
-          <Radio value="c">
-            c) Зазвичай більший розмір для більшого комфорту
-          </Radio>
-          <Radio value="d">d) Експериментую з розмірами</Radio>
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3>Чи важлива для вас якість швів у трусах?</h3>
-        <RadioGroup value={seamQuality} onValueChange={setSeamQuality}>
-          <Radio value="a">a) Так, це дуже важливо</Radio>
-          <Radio value="b">b) Не дуже</Radio>
-          <Radio value="c">c) Залежить від ціни</Radio>
-          <Radio value="d">d) Не впевнений</Radio>
-        </RadioGroup>
-      </div>
-      <div className="w-64 m-auto mb-40">
-        <Button color="primary" onClick={handleSubmit}>
-          Відправити результати
-        </Button>
-      </div>
+    <div
+      style={{
+        width: "70%",
+        marginLeft: "auto",
+        marginRight: "auto",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        marginTop: 50,
+        paddingBottom: 50,
+      }}
+    >
+      <Input
+        variant="bordered"
+        size="sm"
+        className="mb-2"
+        placeholder="Введіть своє ім'я"
+        value={userName}
+        onChange={(e) => setUserName(e.target.value)}
+      />
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="characters">
+          {(provided) => (
+            <ul
+              className=" flex flex-col"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {listItems.map((elem, index) => {
+                return (
+                  <Draggable key={elem.id} draggableId={elem.id} index={index}>
+                    {(provided) => (
+                      <li
+                        className="p-3 mb-2 rounded-md text-white bg-sky-600 text-lg font-bold"
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                      >
+                        <p className=" flex gap-3">
+                          <span> {elem.number}</span>
+                          <span> {elem.title}</span>
+                        </p>
+                      </li>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
+      <Button
+        color="primary"
+        onClick={handleSubmit}
+        className="mt-4"
+        variant="shadow"
+      >
+        Відправити
+      </Button>
     </div>
   );
 };
 
-export default GamePreferences;
+export default App;

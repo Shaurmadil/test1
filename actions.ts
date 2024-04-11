@@ -5,8 +5,9 @@ import { db } from "./db";
 import { revalidatePath } from "next/cache";
 
 type UserResult = {
-  question: string;
-  answer: string;
+  id: string;
+  number: number;
+  title: string;
 };
 
 type Props = {
@@ -19,8 +20,9 @@ export const createUserResult = async (props: Props) => {
     const userResultSchema = z.object({
       userResults: z.array(
         z.object({
-          question: z.string().min(1),
-          answer: z.string().min(1),
+          id: z.string(),
+          number: z.number(),
+          title: z.string(),
         })
       ),
       userName: z.string().min(1),
